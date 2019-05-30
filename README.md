@@ -1,4 +1,10 @@
-# Tomales AKP Project
-Team members of this project are Dr. J Hall Cushman, Julia Michaels, Dr. Michele Tobias, and Alexenia Aldape.
+# Tomales AKP Project Team:
+Dr. J Hall Cushman (Professor and Chair of the department of Ecology Evolution and Conservation Biology at University of Nevada, Reno)
+
+Julia Michaels (
+
+[Dr. Michele Tobias] (https://github.com/micheletobias) (GIS Data Curator, Data Management Program at UC Davis)
+
+[Alexenia Aldape] (https://github.com/Alexenia) ((UC Davis Alumni & Intern, UC Davis Center for Spatial Sciences)
 
 
