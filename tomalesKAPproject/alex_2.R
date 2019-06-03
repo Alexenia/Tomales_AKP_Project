@@ -45,7 +45,7 @@ BH1_IR_proj<-projectRaster(BH1_IR, BH1_RGB)
 #Shapefile
 
 polygon<-shapefile("Polygons.shp")
-plot(polygon, add=TRUE) #Alex_Error-line 49: plot.new has not been called yet.
+plot(polygon, add=TRUE)            #Alex: Error-plot.new has not been called yet.
 BH1_shp_ug<-subset(polygon, PlotID=='BH-01 UG') #Ungrazed
 BH1_shp_g<-subset(polygon, PlotID=='BH-01 G')#Grazed
 
@@ -58,11 +58,11 @@ BH1_IR_mask<-mask(BH1_IR_proj, BH1_shp_ug)
 
 
 BH1RGB_crop<- crop(BH1_RGB_mask, BH1_shp_ug) 
-plot(BH1RGB_crop) #Alex_Plot of the four graphs.
+plot(BH1RGB_crop)            #Alex: four images produced.
 ex<-extent(BH1RGB_crop)
 
 BH1IR_crop<- crop(BH1_IR_mask, ex) 
-plot(BH1IR_crop) #Alex_one IR graph.
+plot(BH1IR_crop)             #Alex: one image produced.
 
 
 # Stack and Brick IR and RGB --------------------------------------------------------
@@ -77,8 +77,8 @@ BH1_stack<-writeRaster(BH1_stack, filename="C:/Users/aalda/Desktop/All plots 201
 # Calculate NDVI ----------------------------------------------------------
 
 BH1_ndvi_ungrazed<-((BH1_stack[[5]]-BH1_stack[[1]])/(BH1_stack[[5]]+BH1_stack[[1]]))
-plot(BH1_ndvi_ungrazed) #Alex_plot of NDVI of ungrazed area.
-hist(BH1_ndvi_ungrazed) #Alex_NVDI historgram of ungrazed area.
+plot(BH1_ndvi_ungrazed)         #Alex: one image produced.
+hist(BH1_ndvi_ungrazed)         #Alex: histogram produced.
 
 
 
@@ -93,48 +93,48 @@ BH1_IR_mask<-mask(BH1_IR_proj, BH1_shp_g)
 
 
 BH1RGB_crop<- crop(BH1_RGB_mask, BH1_shp_g) 
-plot(BH1RGB_crop) #Alex_plot of four graphs.
+plot(BH1RGB_crop)          #Alex: four images produced.
 ex<-extent(BH1RGB_crop)
 
 BH1IR_crop<- crop(BH1_IR_mask, ex) 
-plot(BH1IR_crop)  #Alex_single plot of grazed area.
+plot(BH1IR_crop)           #Alex: one image produced.
 
 
 # Stack and Brick IR and RGB --------------------------------------------------------
 
 BH1_stack<-stack(BH1RGB_crop, BH1IR_crop)
-nlayers(BH1_stack)
+nlayers(BH1_stack)          #Alex: there are 5 layers.
 
 # Calculate NDVI ----------------------------------------------------------
 
 BH1_ndvi_grazed<-((BH1_stack[[5]]-BH1_stack[[1]])/(BH1_stack[[5]]+BH1_stack[[1]]))
-plot(BH1_ndvi_grazed) #Alex: NDVI plot of grazed area.
-BL2_IR_mask<-mask(BL2_IR_proj, BL2_shp_g) #Alex: BL2_IR_proj is found later (line 185) in code and BL2_shp_g (line 181) is earlier in code.
+plot(BH1_ndvi_grazed)           #Alex: one image produced.
+BL2_IR_mask<-mask(BL2_IR_proj, BL2_shp_g)    #Alex: first run line 185 for BL2_IR_proj and line 181 for BL2_shp_g.
 
 
 
-BL2RGB_crop<- crop(BL2_RGB_mask, BL2_shp_g) #Alex: run line 199 for BL2_RGB_mask first.
-plot(BL2RGB_crop)     #Alex: (assistance) four plots but none of four images are displayed.  
+BL2RGB_crop<- crop(BL2_RGB_mask, BL2_shp_g)   #Alex: first run line 229 for BL2_RGB_mask. 
+plot(BL2RGB_crop)                             #Alex: four images in the shape of parallelgrams. 
 ex<-extent(BL2RGB_crop)
 
 BL2IR_crop<- crop(BL2_IR_mask, ex) 
-plot(BL2IR_crop)    #Alex: (check) plot and image are displayed but the image is in shape of a parallelgram.
+plot(BL2IR_crop)                              #Alex: one image produce in the shape of parallelgram/
 
 
 # Stack and Brick IR and RGB --------------------------------------------------------
 
 BL2_stack<-stack(BL2RGB_crop, BL2IR_crop)
-nlayers(BL2_stack)   #Alex: 5 layers are present. 
+nlayers(BL2_stack)
 
 # Calculate NDVI ----------------------------------------------------------
 
 BL2_ndvi_grazed<-((BL2_stack[[5]]-BL2_stack[[1]])/(BL2_stack[[5]]+BL2_stack[[1]]))
-plot(BL2_ndvi_grazed) #end here.
-hist(BL2_ndvi_grazed)
+plot(BL2_ndvi_grazed)                           #Alex: one image produced in the shape of a parallelgram.
+hist(BL2_ndvi_grazed)                           #Alex: histogram produced.
 
 #compare to ungrazed
 
-BL2_ndvi_ungrazed<-as.data.frame(BL2_ndvi_ungrazed)  #Alex: run line 218 first for BL2_ndvi_ungrazed.
+BL2_ndvi_ungrazed<-as.data.frame(BL2_ndvi_ungrazed) #Alex: First run line 217 for BL2_ndvi_ungrazed.
 BL2_ndvi_grazed<-as.data.frame(BL2_ndvi_grazed)
 
 BH_01_g<-tibble(
@@ -149,8 +149,8 @@ BH_01_ug<-tibble(
 
 BH_01<-rbind(BH_01_g, BH_01_ug)
 ggplot(data=BH_01, aes(x=Treatment, y=Value))+
-  geom_violin(scale='area')
-hist(BH1_ndvi_grazed)      #Alex: historgram plot produced.
+  geom_violin(scale='area')                      #Alex: two images produced.
+hist(BH1_ndvi_grazed)                            #Alex: histogram produced. 
 
 #compare to ungrazed
 
@@ -169,7 +169,7 @@ BH_01_ug<-tibble(
 
 BH_01<-rbind(BH_01_g, BH_01_ug)
 ggplot(data=BH_01, aes(x=Treatment, y=Value))+
-  geom_violin(scale='area')
+  geom_violin(scale='area')                          #Alex: two images produced. 
 
 
 
@@ -182,42 +182,41 @@ BL2_shp_g<-subset(polygon, PlotID=='BL-02 G')#Grazed
 
 #align extent
 
-BL2_IR_proj<-projectRaster(BL2_IR, BL2_RGB)
+BL2_IR_proj<-projectRaster(BL2_IR, BL2_RGB)    #Alex: two images produced.    
 
 #Shapefile
 
 polygon<-shapefile("Polygons.shp")
-plot(polygon, add=TRUE)               #Alex: graph produced.
-BL2_shp_ug<-subset(polygon, PlotID=='BH-01 UG') #Ungrazed
+plot(polygon, add=TRUE)
+BL2_shp_ug<-subset(polygon, PlotID=='BH-01 UG') #Ungrazed     #Alex: warming messages.
 BL2_shp_g<-subset(polygon, PlotID=='BH-01 G')#Grazed
 
 # Mask and clip rasters to polygon --------------------------------------------------
 
 #Ungrazed
 
-
-BL2_RGB_mask<-mask(BL2_RGB, BL2_shp_ug) #Alex: ran fine. 
+BL2_RGB_mask<-mask(BL2_RGB, BL2_shp_ug)
 BL2_IR_mask<-mask(BL2_IR_proj, BL2_shp_ug) 
 
 
 BL2RGB_crop<- crop(BL2_RGB_mask, BL2_shp_ug) 
-plot(BL2RGB_crop)
+plot(BL2RGB_crop)                 #Alex: four images produced in shape of parallelgrams.
 ex<-extent(BL2RGB_crop)
 
-BL2IR_crop<- crop(BL2_IR_mask, ex) #Alex: no image displayed.
-plot(BL2IR_crop)                   #Alex: no image displayed.
+BL2IR_crop<- crop(BL2_IR_mask, ex) 
+plot(BL2IR_crop)                    #Alex: (check) one image not produced.
 
 
 # Stack and Brick IR and RGB --------------------------------------------------------
 
-BL2_stack<-stack(BL2RGB_crop, BL2IR_crop)   
-nlayers(BL2_stack)                 #Alex: 5 layers. 
+BL2_stack<-stack(BL2RGB_crop, BL2IR_crop)
+nlayers(BL2_stack)                           #Alex: 5 layers.
 
 # Calculate NDVI ----------------------------------------------------------
 
 BL2_ndvi_ungrazed<-((BL2_stack[[5]]-BL2_stack[[1]])/(BL2_stack[[5]]+BL2_stack[[1]]))
-plot(BL2_ndvi_ungrazed)           #Alex: graph but no image dispalyed.
-hist(BL2_ndvi_ungrazed)           #Alex: no histogram displayed. Error-invalid number of 'breaks'.
+plot(BL2_ndvi_ungrazed)                 #Alex: (check) no plot produced.
+hist(BL2_ndvi_ungrazed)                 #Alex: (check) no plot produced. Error-invalid number of 'breaks'.
 
 
 
