@@ -1,4 +1,4 @@
-# Tomales AKP Project Team:
+# Tomales KAP Project Team:
 Dr. J Hall Cushman (Professor and Chair of the department of Ecology Evolution and Conservation Biology at University of Nevada, Reno)
 
 Julia Michaels (Ph.D Candidate at UC Davis)
