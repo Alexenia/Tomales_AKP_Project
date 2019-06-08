@@ -9,14 +9,16 @@ setwd("C:/Users/aalda/Desktop/All plots 2018")
 #install.packages('tidyverse')
 #install.packages('rgr')
 #install.packages('uavRst')
+#install.packages('rgdal') -Alex
 
-library(gdalUtils)
+library('gdalUtils')
 library('RStoolbox')
 library('rasterVis')
 library('raster')
 library('ggplot2')
 library('rgr')
 library('tidyverse')
+library('rgdal') #alex wrote this.
 #library('uavRst') #may not have been used.
 
 # Load Data ---------------------------------------------------------------
@@ -39,12 +41,15 @@ BL2_IR<-raster('BL-02 IR.tif')
 
 #align extent
 
-BH1_IR_proj<-projectRaster(BH1_IR, BH1_RGB)
+BH1_IR_proj<-projectRaster(BH1_IR, BH1_RGB) #Alex: Project the values of a Raster object to a new RAster object with another projection (crs). projectRaster(from, to). 
+ 
 
+plot(BH1_IR_proj) #alex+ani: line 53 Error occurs becuase plot name has not been called. Confrim with Julia that this raster is the correct one here. 
+plot(BH1_RGB) #alex
 
 #Shapefile
 
-polygon<-shapefile("Polygons.shp")
+polygon<-shapefile("Polygons.shp") #alex: reading
 plot(polygon, add=TRUE)            #Alex: Error-plot.new has not been called yet.
 BH1_shp_ug<-subset(polygon, PlotID=='BH-01 UG') #Ungrazed
 BH1_shp_g<-subset(polygon, PlotID=='BH-01 G')#Grazed
@@ -109,11 +114,13 @@ nlayers(BH1_stack)          #Alex: there are 5 layers.
 
 BH1_ndvi_grazed<-((BH1_stack[[5]]-BH1_stack[[1]])/(BH1_stack[[5]]+BH1_stack[[1]]))
 plot(BH1_ndvi_grazed)           #Alex: one image produced. (#7-image)
-BL2_IR_mask<-mask(BL2_IR_proj, BL2_shp_g)    #Alex: first run line 185 for BL2_IR_proj and line 181 for BL2_shp_g.
+BL2_IR_mask<-mask(BL2_IR_proj, BL2_shp_g)    #Alex: first run line 181 for BL2_shp_g and line 185 for BL2_IR_proj.
 
 
 
-BL2RGB_crop<- crop(BL2_RGB_mask, BL2_shp_g)   #Alex: first run line 229 for BL2_RGB_mask. 
+BL2RGB_crop<- crop(BL2_RGB_mask, BL2_shp_g)   #Alex: first run line 229 (BL2_RGB_mask<-mask(BL2_RGB, BL2_shp_g). Problem: Error in file(fn, "rb") : cannot open the connection. Solution: run line 72 and line 16 (library (raster)). 
+extent(BL2_RGB_mask)   #alex
+extent(BL2_shp_g)   #alex
 plot(BL2RGB_crop)                             #Alex: four images in the shape of parallelgrams.(#8 image)
 ex<-extent(BL2RGB_crop)
 
@@ -134,7 +141,7 @@ hist(BL2_ndvi_grazed)                           #Alex: histogram produced. (#11 
 
 #compare to ungrazed
 
-BL2_ndvi_ungrazed<-as.data.frame(BL2_ndvi_ungrazed) #Alex: First run line 217 for BL2_ndvi_ungrazed.
+BL2_ndvi_ungrazed<-as.data.frame(BL2_ndvi_ungrazed) #Alex: First run line 217 for BL2_ndvi_ungrazed which is ( BL2_ndvi_ungrazed<-((BL2_stack[[5]]-BL2_stack[[1]])/(BL2_stack[[5]]+BL2_stack[[1]])) .
 BL2_ndvi_grazed<-as.data.frame(BL2_ndvi_grazed)
 
 BH_01_g<-tibble(
@@ -200,6 +207,9 @@ BL2_IR_mask<-mask(BL2_IR_proj, BL2_shp_ug)
 
 
 BL2RGB_crop<- crop(BL2_RGB_mask, BL2_shp_ug)    #Alex: first run line 191 for BL2_shp_ug. 
+crs(BL2RGB_crop) #alex
+crs(BL2_RGB_mask)  #alex
+crs(BL2_shp_ug)    #alex
 plot(BL2RGB_crop)                 #Alex: four images produced in shape of parallelgrams. (#16 image)
 ex<-extent(BL2RGB_crop)
 
