@@ -27,7 +27,7 @@ library('rgdal') #alex wrote this.
 # Load Data ---------------------------------------------------------------
 #Raster
 
-                   # We will create a character vector list of raster files using the list.files() function in the directory named "All plots 2018". This list will be used to generate a Rasterstack.
+# We will create a character vector list of raster files using the list.files() function in the directory named "All plots 2018". This list will be used to generate a Rasterstack.
 files <- list.files()
 files              #See the list of all files in the directory named "All plots 2018".
 dbf.files <- files[grep(".tif", files, fixed=T)]        #Creates a file that is list of names only having .tif extensions. Grep function finds ".tiff" pattern in the created "files" and fixed=T means pattern is a text string.
@@ -488,8 +488,8 @@ LGH_01_ug<-tibble(
 )
 
 LGH_01<-rbind(LGH_01_g, LGH_01_ug)
- ggplot(data=LGH_01, aes(x=Treatment, y=Value))+
- geom_violin(scale='area')                        #image10-one graph produced.
+ggplot(data=LGH_01, aes(x=Treatment, y=Value))+
+  geom_violin(scale='area')                        #image10-one graph produced.
 
 
 
