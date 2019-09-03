@@ -1,8 +1,8 @@
 
 #---------------------------------
 #Set working directory to ensure R can find the files we wish to import.
-setwd("C:/Users/aalda/Desktop/All plots 2018")
-
+setwd("D:/Ortho 2019")
+#setwd("C:/Users/aalda/Desktop/QGIS-Training-Data-QGIS-Training-Data-v1.0/QGIS-Training-Data-QGIS-Training-Data-v1.0/training_manual_data/exercise_data")
 #Installing and Loading all packages-------------
 
 #install.packages("RStoolbox")
@@ -33,34 +33,38 @@ files              #See the list of all files in the directory named "All plots 
 dbf.files <- files[grep(".tif", files, fixed=T)]        #Creates a file that is list of names only having .tif extensions. Grep function finds ".tiff" pattern in the created "files" and fixed=T means pattern is a text string.
 for(i in dbf.files) { assign(unlist(strsplit(i, "[.]"))[1], raster(i)) }    #
 
-BH1_RGB<-stack("BH-01 RGB_modified.tif")       # (1) Import multi-band raster data, using the stack() function. 
-BH1_IR<-raster('BH-01 IR_modified.tif')        # (1) Import and create a Rasterlayer file using the raster function. 
+BH1_RGB<-stack("BH-01 RGB.tif")       # (1) Import multi-band raster data, using the stack() function. 
+BH1_IR<-raster('BH-01-IR.tif')        # (1) Import and create a Rasterlayer file using the raster function. 
 BL2_RGB<-stack("BL-02 RGB.tif")  #(2)
-BL2_IR<-raster('BL-02_IR.tif')   #(2)
-BH2_RGB<-stack("BH-02 RGB.tif")  #(3)        
+BL2_IR<-raster('BL-02 IR_transparent_mosaic_group1.tif')   #(2)
+BH2_RGB<-stack("BH-02-RGB_ABRGB.tif")  #(3)        
 BH2_IR<-raster('BH-02 IR.tif')   #(3)
-LGH1_RGB<-stack("LGH1-RGB_1-20_modified.tif")  #(4)
-LGH1_IR<-raster('LGH1-IR_1-20_modified.tif')   #(4)
-LGH2_RGB<-stack("LGH-2 RGB_modified.tif")      #(5)
-LGH2_IR<-raster('LGH-2 IR_modified.tif')       #(5)
-LGL1_RGB<-stack("LGL-1 RGB 1-20_modified.tif") #(6)
-LGL1_IR<-raster('LG-L1 IR 1-20_modified.tif')  #(6)
-LGL2_RGB<-stack("LGL-2-RGB_modified_2.tif")    #(7)
-LGL2_IR<-raster('LGL-2 IR-modified.tif')       #(7)
-OGH1_RGB<-stack("OGH-1 RGB2_modified.tif")     #(8)
-OGH1_IR<-raster('OGH-1 IR_modified.tif')       #(8)
-OGH2_RGB<-stack("OG-H2 RGB_modified.tif")      #(9)
-OGH2_IR<-raster('OG-H2 IR_modified.tif')       #(9)
-
+LGH1_RGB<-stack("LG-H1 RGB.tif")  #(4)
+LGH1_IR<-raster('LG-H1 IR.tif')   #(4)
+#----------------------------------------
+#(needs redo) LGH2_RGB<-stack("LGH-02 RGB.tif")      #(5)
+LGH2_IR<-raster('LGH-02 IR.tif')       #(5)
+#LGL1_RGB<-stack("LGL-1 RGB 1-20_modified.tif") #(6)
+LGL1_IR<-raster('LGL1-IR.tif')  #(6)
+LGL2_RGB<-stack("LGL-2 RGB.tif")    #(7)
+#LGL2_IR<-raster('LGL-2 IR-modified.tif')       #(7)
+#OGH1_RGB<-stack("OGH-1 RGB2_modified.tif")     #(8)
+#OGH1_IR<-raster('OGH-1 IR_modified.tif')       #(8)
+#OGH2_RGB<-stack("OG-H2 RGB_modified.tif")      #(9)
+#OGH2_IR<-raster('OG-H2 IR_modified.tif')       #(9)
 
 
 # (1) BH-01 -------------------------------------------------------------------
 
-
 #align extent
 
-
 BH1_IR_proj<-projectRaster(BH1_IR, BH1_RGB) #Alex: Project the data of a Raster object to a new RAster object with another projection (crs). projectRaster(from, to). 
+projection(BH1_IR)
+projection(BH1_RGB)
+crs(BH1_IR)<-'+proj=longlat +datum=WGS84 +no_defs'  # This set the projection to the one we want-- Longlat.
+projection(BH1_IR)                             #Check the projection was changed.
+BH1_IR_proj<-BH1_IR                            #Set the projection of BH2_IR_proj to be the same as BH2_IR. 
+projection(BH1_IR_proj)                        #check the projection of BH2_IR_proj was updated. 
 
 
 #Shapefile
