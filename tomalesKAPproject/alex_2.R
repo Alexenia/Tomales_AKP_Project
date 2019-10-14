@@ -37,8 +37,8 @@ BH1_RGB<-stack("BH-01 RGB_modified.tif")       # (1) Import multi-band raster da
 BH1_IR<-raster('BH-01 IR_modified.tif')        # (1) Import and create a Rasterlayer file using the raster function. 
 BL2_RGB<-stack("BL-02 RGB.tif")  #(2)
 BL2_IR<-raster('BL-02_IR.tif')   #(2)
-BH2_RGB<-stack("BH-02 RGB.tif")  #(3)        
-BH2_IR<-raster('BH-02 IR.tif')   #(3)
+#BH2_RGB<-stack("BH-02 RGB.tif")  #(3)        
+#BH2_IR<-raster('BH-02 IR.tif')   #(3)
 LGH1_RGB<-stack("LGH1-RGB_1-20_modified.tif")  #(4)
 LGH1_IR<-raster('LGH1-IR_1-20_modified.tif')   #(4)
 LGH2_RGB<-stack("LGH-2 RGB_modified.tif")      #(5)
@@ -81,6 +81,7 @@ BH1_IR_mask<-mask(BH1_IR_proj, BH1_shp_ug)
 
 BH1RGB_crop<- crop(BH1_RGB_mask, BH1_shp_ug) 
 plot(BH1RGB_crop)            #Alex: four images produced.(#1-image)
+hist(BH1RGB_crop)
 ex<-extent(BH1RGB_crop)
 
 BH1IR_crop<- crop(BH1_IR_mask, ex) 
@@ -101,7 +102,6 @@ BH1_stack<-writeRaster(BH1_stack, filename="C:/Users/aalda/Desktop/All plots 201
 BH1_ndvi_ungrazed<-((BH1_stack[[5]]-BH1_stack[[1]])/(BH1_stack[[5]]+BH1_stack[[1]]))
 plot(BH1_ndvi_ungrazed)         #Alex: one image produced.(#3-image)
 hist(BH1_ndvi_ungrazed)         #Alex: histogram produced. (#4-image)
-
 
 
 # Do it all again for BH1 Grazed ------------------------------------------
@@ -131,51 +131,8 @@ nlayers(BH1_stack)          #Alex: there are 5 layers.
 
 BH1_ndvi_grazed<-((BH1_stack[[5]]-BH1_stack[[1]])/(BH1_stack[[5]]+BH1_stack[[1]]))
 plot(BH1_ndvi_grazed)           #Alex: one image produced. (#7-image)
-BL2_IR_proj<-projectRaster(BL2_IR, BL2_RGB) #Alex: copied and pasted here.
-BL2_shp_g<-subset(polygon, PlotID=='BL-02 G')#Grazed -Alex copied and pasted here.
-BL2_IR_mask<-mask(BL2_IR_proj, BL2_shp_g)    #Alex: first run line 181 for BL2_shp_g and line 185 for BL2_IR_proj.
+hist(BH1_ndvi_grazed)           #Alex: New-update: one image produced (new#8-image)
 
-
-BL2_RGB_mask<-mask(BL2_RGB, BL2_shp_g)    #Alex: copieds line 229 and pasted it here
-BL2_shp_g<-subset(polygon, PlotID=='BL-02 G')#Grazed   #Alex: copied and pasted it here
-BL2RGB_crop<- crop(BL2_RGB_mask, BL2_shp_g)   #Alex: first run line 229 (BL2_RGB_mask<-mask(BL2_RGB, BL2_shp_g). Problem: Error in file(fn, "rb") : cannot open the connection. Solution: run line 72 and line 16 (library (raster)). 
-plot(BL2RGB_crop)                              #Alex: four images in the shape of parallelgrams.(#8 image)
-ex<-extent(BL2RGB_crop)
-
-BL2IR_crop<- crop(BL2_IR_mask, ex) 
-plot(BL2IR_crop)                              #Alex: one image produce in the shape of parallelgram. (#9-image)
-
-
-# Stack and Brick IR and RGB --------------------------------------------------------
-
-BL2_stack<-stack(BL2RGB_crop, BL2IR_crop)
-nlayers(BL2_stack)
-
-# Calculate NDVI ----------------------------------------------------------
-
-BL2_ndvi_grazed<-((BL2_stack[[5]]-BL2_stack[[1]])/(BL2_stack[[5]]+BL2_stack[[1]]))
-plot(BL2_ndvi_grazed)                           #Alex: one image produced in the shape of a parallelgram.(#10 image)
-hist(BL2_ndvi_grazed)                           #Alex: histogram produced. (#11 image)
-
-#compare to ungrazed
-BL2_ndvi_ungrazed<-((BL2_stack[[5]]-BL2_stack[[1]])/(BL2_stack[[5]]+BL2_stack[[1]]))  #alex:copied/pasted here.
-BL2_ndvi_ungrazed<-as.data.frame(BL2_ndvi_ungrazed) #Alex: First run line 217 for BL2_ndvi_ungrazed which is ( BL2_ndvi_ungrazed<-((BL2_stack[[5]]-BL2_stack[[1]])/(BL2_stack[[5]]+BL2_stack[[1]])) .
-BL2_ndvi_grazed<-as.data.frame(BL2_ndvi_grazed)
-
-BH_01_g<-tibble(
-  Value=BL2_ndvi_grazed$layer,
-  Treatment="Grazed"
-)
-
-BH_01_ug<-tibble(
-  Value=BL2_ndvi_ungrazed$layer,
-  Treatment="Ungrazed"
-)
-
-BH_01<-rbind(BH_01_g, BH_01_ug)
-ggplot(data=BH_01, aes(x=Treatment, y=Value))+
-  geom_violin(scale='area')                      #Alex: two images produced.(#12 image)
-hist(BH1_ndvi_grazed)                            #Alex: histogram produced. (#13 image)
 
 #compare to ungrazed
 
@@ -194,7 +151,7 @@ BH_01_ug<-tibble(
 
 BH_01<-rbind(BH_01_g, BH_01_ug)
 ggplot(data=BH_01, aes(x=Treatment, y=Value))+
-  geom_violin(scale='area')                          #Alex: two images produced. (#14 image)
+  geom_violin(scale='area')                          #Alex: two images produced. (new#9 image-was image#14)
 
 
 
@@ -297,7 +254,7 @@ BL_02_ug<-tibble(
 BL_02<-rbind(BL_02_g, BL_02_ug)
 ggplot(data= BL_02, aes (x= Treatment, y=Value))+
   geom_violin(scale='area')
-#hist(BL2_ndvi_grazed)    # Error in hist.default(BL2_ndvi_grazed) : 'x' must be numeric. Image# 
+
 
 
 #(3) BH-02 ----------------------------------------------------------------------------------------
@@ -328,10 +285,10 @@ BH2_shp_g<-subset(polygon, PlotID == 'BH-02_G')
 
 #BH2: UNGRAZED
 
-length(BH2_RGB)
-length(BH2_shp_ug)
-BH2_RGB_mask<-mask(BH2_RGB, BH2_shp_ug)       #Error in x@polygons[[i]] : subscript out of bounds
-BH2_IR_mask<-mask(BH2_IR_proj, BH2_shp_ug)    #Error in x@polygons[[i]] : subscript out of bounds
+#length(BH2_RGB)
+#length(BH2_shp_ug)
+BH2_RGB_mask<-mask(BH2_RGB, BH2_shp_ug)      
+BH2_IR_mask<-mask(BH2_IR_proj, BH2_shp_ug)    
 
 BH2RGB_crop<-crop(BH2_RGB_mask, BH2_shp_ug)
 plot(BH2RGB_crop)
@@ -393,7 +350,6 @@ BH_02_ug<-tibble(
 BH_02<-rbind(BH_02_g, BH_02_ug)
 ggplot(data=BH_02, aes(x=Treatment, y=Value))+
   geom_violin(scale='area')
-hist(BH2_ndvi_grazed)
 
 
 
@@ -412,7 +368,6 @@ LGH1_IR_proj<-projectRaster(LGH1_IR, LGH1_RGB)
 
 plot(LGH1_IR_proj)                                                           #image1-one graph produced.
 polygon<-shapefile('C:/Users/aalda/Desktop/All plots 2018/Polygons.shp')
-length(polygon)
 plot(polygon, add=TRUE)                                                      #image2-image with boundaries plotted.
 #poly<-readOGR('C:/Users/aalda/Desktop/All plots 2018/Polygons.shp')
 #poly@data
@@ -432,7 +387,8 @@ LGH1_RGB_crop<-crop(LGH1_RGB_mask, LGH1_shp_ug)
 plot(LGH1_RGB_crop)                                           #image3-Four graphs produced.                             
 ex<-extent(LGH1_RGB_crop)
 
-LGH1_IR_crop<-crop(LGH1_RGB_crop, ex)
+
+LGH1_IR_crop<-crop(LGH1_IR_mask, ex)
 plot(LGH1_IR_crop)                                            #iamge4-four graphs produced.
 
 #LGH1: Stack and brick IR and RGB --------------------------
@@ -443,8 +399,10 @@ nlayers(LGH1_stack)
 #LGH1: Calculate NDVI--------------------------------------
 
 LGH1_ndvi_ungrazed<-((LGH1_stack[[5]]-LGH1_stack[[1]])/(LGH1_stack[[5]]+LGH1_stack[[1]]))
-plot(LGH1_ndvi_ungrazed)                          #image5-one graph produced.
-hist(LGH1_ndvi_ungrazed)                          #image6-histrogram-only axis was produced. 
+plot(LGH1_ndvi_ungrazed)                          #5-UPdate: plot_LGH1_ndvi_ungrazed. one graph produced.
+hist(LGH1_ndvi_ungrazed)                          #6-Update: hist_LGH1_ndvi_ungrazed. One graph produced.
+
+
 
 # Do it all again for LGH1 Grazed --------------------
 
@@ -470,7 +428,7 @@ nlayers(LGH1_stack_g)                                #5 layers
 
 LGH1_ndvi_grazed<-((LGH1_stack_g[[5]]-LGH1_stack_g[[1]])/(LGH1_stack_g[[5]]+LGH1_stack_g[[1]]))
 plot(LGH1_ndvi_grazed)                              #image9- one graph produced.
-
+hist(LGH1_ndvi_grazed)                              #New image 10- update- one histogram produced.
 
 #LGH1: Compare Grazed to Ungrazed -------------------
 
@@ -489,7 +447,7 @@ LGH_01_ug<-tibble(
 
 LGH_01<-rbind(LGH_01_g, LGH_01_ug)
  ggplot(data=LGH_01, aes(x=Treatment, y=Value))+
- geom_violin(scale='area')                        #image10-one graph produced.
+ geom_violin(scale='area')                        #image11-one graph produced. Update name on google drive.
 
 
 
@@ -529,8 +487,7 @@ plot(LGH2RGB_crop)                                       #3-LGH2RGB_mask image. 
 ex<-extent(LGH2RGB_crop)
 
 LGH2IR_crop<-crop(LGH2_IR_mask, ex)
-plot(LGH2IR_crop)                                       #4-LGH2IR_crop image. **Issue-graph not produced.
-
+plot(LGH2IR_crop)                                       #image 4-updated_LGH2IR_crop_ug
 
 #LGH2: Stack and brick IR and RGB -----------------------
 
@@ -541,8 +498,8 @@ nlayers(LGH2_stack)
 #LGH2: Calculate NDVI of the Ungrazed ------------------
 
 LGH2_ndvi_ungrazed<-((LGH2_stack[[5]]-LGH2_stack[[1]])/(LGH2_stack[[5]]+LGH2_stack[[1]]))
-plot(LGH2_ndvi_ungrazed)                                  #5-LGH2_ndvi_ungrazed image. **Issue-graph not produced.
-hist(LGH2_ndvi_ungrazed)                                  #6-LGH2_ndvi_ungrazed histogram. **Issue- graph not produced.
+plot(LGH2_ndvi_ungrazed)                                  #5-LGH2_ndvi_ungrazed image.
+hist(LGH2_ndvi_ungrazed)                                  #6-LGH2_ndvi_ungrazed histogram.
 
 
 # Do it all again for LGH2 Grazed ------------------------
@@ -570,7 +527,7 @@ nlayers(LGH2_stack)
 
 LGH2_ndvi_grazed<-((LGH2_stack[[5]]-LGH2_stack[[1]])/ (LGH2_stack[[5]]+LGH2_stack[[1]]))
 plot(LGH2_ndvi_grazed)                                      #9-LgH2_ndvi_grazed image. One graph produced.
-
+hist(LGH2_ndvi_grazed)                                      #new image 10-hist_LGH2_ndvi_grazed. One graph. Update on google drive.
 
 #LGH2: Compare Grazed to Ungrazed -------------------
 
@@ -589,8 +546,8 @@ LGH_02_ug<-tibble(
 
 LGH_02<-rbind(LGH_02_g, LGH_02_ug)
 ggplot(data=LGH_02, aes(x=Treatment, y=Value))+
-  geom_violin(scale='area')
-hist(LGH2_ndvi_grazed)
+  geom_violin(scale='area')                             #updated_image11_ggplot_LGH_02. Upload on google drive.
+
 
 
 
@@ -620,15 +577,16 @@ LGL1_shp_g<-subset(polygon, PlotID == 'LGL-1 G')  # Grazed
 #LGL1: Ungrazed 
 
 LGL1_RGB_mask_ug<-mask(LGL1_RGB, LGL1_shp_ug)                    
-LGL1_IR_mask<-mask(LGL1_IR_proj, LGL1_shp_g)                 
+LGL1_IR_mask<-mask(LGL1_IR_proj, LGL1_shp_ug)                 
+
 
 LGL1_RGB_crop_ug<-crop(LGL1_RGB_mask_ug, LGL1_shp_ug)
 plot(LGL1_RGB_crop_ug)                                    #3-LGL1-RGB_crop_ug. Four graphs produced.
 ex<-extent(LGL1_RGB_crop_ug)
 
-
 LGL1_IR_crop_ug<-crop(LGL1_IR_mask, ex)
-plot(LGL1_IR_crop_ug)                                      #4-LGL1-IR_crop_ug. Single graph produced. *Issue: only a portion of area is displayed. 
+plot(LGL1_IR_crop_ug)                           #4-LGL1-IR_crop_ug. Single graph produced. *Issue: only a portion of area is displayed. 
+#plot(LGL1_IR_crop_ug, ylim=c(38.18600, 38.18750), xlim=c(-122.9809, -122.9608))   
 
 
 #LGL1: Stack and brick IR and RGB -----------------------
@@ -640,24 +598,24 @@ nlayers(LGL1_stack_ug)
 #LGL1: Calculate NDVI of the Ungrazed ------------------
 
 LGL1_ndvi_ungrazed<-((LGL1_stack_ug[[5]]-LGL1_stack_ug[[1]])/(LGL1_stack_ug[[5]]+LGL1_stack_ug[[1]]))
-plot(LGL1_ndvi_ungrazed)             #5-LGL1_ndvi_ungrased. Single graph produced. **Issued: area is not displayed in graph.  
-hist(LGL1_ndvi_ungrazed)             #6-histogram: LGL1_ndvi_ungrazed. **Issue: Error in hist.default(v, main = main, plot = plot, ...): invalid number of 'breaks'.
-
+plot(LGL1_ndvi_ungrazed)             #5-LGL1_ndvi_ungrased. Single graph produced.  
+hist(LGL1_ndvi_ungrazed)             #6-histogram: LGL1_ndvi_ungrazed.
 
 # Do it all again for LGH2 Grazed ------------------------
 
 #LGL1: Grazed 
 
 LGL1RGB_mask_g<-mask(LGL1_RGB, LGL1_shp_g)
-LGL1IR_mask_g<-mask(LGL1_IR_proj, LGH1_shp_g)
+LGL1IR_mask_g<-mask(LGL1_IR_proj, LGL1_shp_g)
 
 LGL1RGB_crop_g<-crop(LGL1RGB_mask_g, LGL1_shp_g)       
 plot(LGL1RGB_crop_g)                                     #7-LGL1RGB_crop_g. Four graphs produced. 
 ex<-extent(LGL1RGB_crop_g)
 
 LGL1IR_crop_g<-crop(LGL1IR_mask_g, ex)
-plot(LGL1IR_crop_g)                                       #8-LGL1IR_crop_g. **Issue: no graph displayed.
-
+plot(LGL1IR_crop_g)    #8-LGL1IR_crop_g. **Issue: no graph displayed.
+#plot(LGL1IR_crop_g, ylim=c(38.18600, 38.18650), xlim=c(-122.9730, -122.9600))   
+#extent(ex)
 
 #LGL1: Stack and brick IR and RGB ----------------------
 
@@ -668,8 +626,8 @@ nlayers(LGL1_stack)
 #LGL1: Calculate NDVI ----------------------------------
 
 LGL1_ndvi_grazed<-((LGL1_stack[[5]]-LGL1_stack[[1]])/ (LGL1_stack[[5]]+LGL1_stack[[1]]))
-plot(LGL1_ndvi_grazed)                       #9-LGL1_ndvi_grazed. **Issue: graph not displayed.
-
+plot(LGL1_ndvi_grazed)                       #9-LGL1_ndvi_grazed. 
+hist(LGL1_ndvi_grazed)                       #10-hist_LGL1_ndvi_grazed. 
 
 #LGL1: Compare Grazed to Ungrazed -------------------
 
@@ -688,8 +646,8 @@ LGL_01_ug<-tibble(
 
 LGL_01<-rbind(LGL_01_g, LGL_01_ug)                
 ggplot(data=LGL_01, aes(x=Treatment, y=Value))+
-  geom_violin(scale='area')                       #10-LGL_01 graph produced. 
-hist(LGL1_ndvi_grazed)
+  geom_violin(scale='area')                       #11-update-ggplot_LGL_01. 
+
 
 
 
@@ -721,14 +679,15 @@ LGL2_shp_g<-subset(polygon, PlotID == 'LGL-2 G')  # Grazed
 #LGL2: Ungrazed 
 
 LGL2_RGB_mask<-mask(LGL2_RGB, LGL2_shp_ug)          
-LGL2_IR_mask<-mask(LGL2_IR_proj, LGL2_shp_g)
+LGL2_IR_mask<-mask(LGL2_IR_proj, LGL2_shp_ug)
+
 
 LGL2RGB_crop<-crop(LGL2_RGB_mask, LGL2_shp_ug)
 plot(LGL2RGB_crop)                                  #3-LGL2RGB_crop. 
 ex<-extent(LGL2RGB_crop)
 
 LGL2IR_crop<-crop(LGL2_IR_mask, ex)
-plot(LGL2IR_crop)                                   #4-LGL2IR_crop. **Issue: image is partially displayed. 
+plot(LGL2IR_crop)                                   #4-update: LGL2IR_crop.
 
 
 ####LGL2: Stack and brick IR and RGB -----------------------
@@ -740,8 +699,8 @@ nlayers(LGL2_stack)
 #LGL2: Calculate NDVI of the Ungrazed ------------------
 
 LGL2_ndvi_ungrazed<-((LGL2_stack[[5]]-LGL2_stack[[1]])/(LGL2_stack[[5]]+LGL2_stack[[1]]))
-plot(LGL2_ndvi_ungrazed)             #5-LGL_ndvi_ungrazed. **Issue- graph axis drawn but ndvi image is not displayed.
-hist(LGL2_ndvi_ungrazed)            #6--Error in hist.default(v, main = main, plot = plot, ...): invalid number of 'breaks'
+plot(LGL2_ndvi_ungrazed)             #5-LGL_ndvi_ungrazed.
+hist(LGL2_ndvi_ungrazed)            #6-update: hist_LGL2_ndvi_ungrazed.
 
 
 # Do it all again for LGH2 Grazed ------------------------
@@ -769,7 +728,7 @@ nlayers(LGL2_stack)
 
 LGL2_ndvi_grazed<-((LGL2_stack[[5]]-LGL2_stack[[1]])/ (LGL2_stack[[5]]+LGL2_stack[[1]]))
 plot(LGL2_ndvi_grazed)                            #9-LGL2_ndvi_grazed image. One graph produced.
-
+hist(LGL2_ndvi_grazed)                            #10-new-hist_LGL2_ndvi_grazed. 
 
 #LGL2: Compare Grazed to Ungrazed -------------------
 
@@ -788,8 +747,8 @@ LGL_02_ug<-tibble(
 
 LGL_02<-rbind(LGL_02_g, LGL_02_ug)
 ggplot(data=LGL_02, aes(x=Treatment, y=Value))+
-  geom_violin(scale='area')                #10-ggplot_LGL_02. One graph produced.
-hist(LGL2_ndvi_grazed)                     #11 - graph not produced. ** Error in hist.default(LGL2_ndvi_grazed) : 'x' must be numeric.
+  geom_violin(scale='area')                #11-update: ggplot_LGL_02. One graph produced.
+
 
 
 
@@ -820,14 +779,14 @@ OGH1_shp_g<-subset(polygon, PlotID == 'OGH1 G')  # Grazed
 #OGH1: Ungrazed 
 
 OGH1_RGB_mask<-mask(OGH1_RGB, OGH1_shp_ug)            
-OGH1_IR_mask<-mask(OGH1_IR_proj, OGH1_shp_g)
+OGH1_IR_mask<-mask(OGH1_IR_proj, OGH1_shp_ug)
 
 OGH1RGB_crop<-crop(OGH1_RGB_mask, OGH1_shp_ug)
 plot(OGH1RGB_crop)                                 #3-OGH1RGB_crop image. Four graph produced.
 ex<-extent(OGH1RGB_crop)
 
 OGH1IR_crop<-crop(OGH1_IR_mask, ex)
-plot(OGH1IR_crop)                                 #4-OGH1IR_crop image. **Issue: Graph displays partial area.
+plot(OGH1IR_crop)                                 #4-update:plot_OGH1IR_crop_ungrazed. One graph produced.
 
 
 #OGH1: Stack and brick IR and RGB -----------------------
@@ -839,8 +798,8 @@ nlayers(OGH1_stack)
 #OGH1: Calculate NDVI of the Ungrazed ------------------
 
 OGH1_ndvi_ungrazed<-((OGH1_stack[[5]]-OGH1_stack[[1]])/(OGH1_stack[[5]]+OGH1_stack[[1]]))
-plot(OGH1_ndvi_ungrazed)                            #5-OGH1_ndvi_ungrased. **Issue no graph displayed. 
-hist(OGH1_ndvi_ungrazed)                            #6. **Issue: Error in hist.default(v, main = main, plot = plot, ...):invalid number of 'breaks'.
+plot(OGH1_ndvi_ungrazed)                            #5-Update: OGH1_ndvi_ungrased. One graph produced. 
+hist(OGH1_ndvi_ungrazed)                            #6-Update: hist_OGH1_ndvi_ungrazed. 
 
 
 # Do it all again for OGH1 Grazed ------------------------
@@ -887,8 +846,8 @@ OGH_01_ug<-tibble(
 
 OGH_01<-rbind(OGH_01_g, OGH_01_ug)
 ggplot(data=OGH_01, aes(x=Treatment, y=Value))+
-  geom_violin(scale='area')                #10-OGH1 image. One image produced. **Warning: Removed 3972881 rows containing non-finite values (stat_ydensity).
-hist(OGH1_ndvi_grazed)                     #Error in hist.default(OGH1_ndvi_grazed) : 'x' must be numeric
+  geom_violin(scale='area')                #10-Update: ggplot_OGH1 image.
+
 
 
 
@@ -921,14 +880,14 @@ OGH2_shp_g<-subset(polygon, PlotID == 'OGH2 G')  # Grazed
 #OGH2: Ungrazed 
 
 OGH2_RGB_mask<-mask(OGH2_RGB, OGH2_shp_ug)                
-OGH2_IR_mask<-mask(OGH2_IR_proj, OGH2_shp_g)
+OGH2_IR_mask<-mask(OGH2_IR_proj, OGH2_shp_ug)
 
 OGH2RGB_crop<-crop(OGH2_RGB_mask, OGH2_shp_ug)
 plot(OGH2RGB_crop)                                       #3-OGH2RGB_crop image. Four graphs produced.
 ex<-extent(OGH2RGB_crop)
 
 OGH2IR_crop<-crop(OGH2_IR_mask, ex)
-plot(OGH2IR_crop)                                         #4-OGH2IR_crop image. **Issue- graph not produced.
+plot(OGH2IR_crop)                                         #4-Update: OGH2IR_crop image. 
 
 
 #OGH2: Stack and brick IR and RGB -----------------------
@@ -941,7 +900,7 @@ nlayers(OGH2_stack)
 
 OGH2_ndvi_ungrazed<-((OGH2_stack[[5]]-OGH2_stack[[1]])/(OGH2_stack[[5]]+OGH2_stack[[1]]))
 plot(OGH2_ndvi_ungrazed)                                #5-OGH2_ndvi_ungrazed image not produced.**Issue: Graph not produced.                           
-hist(OGH2_ndvi_ungrazed)                                #6-OGH2_ndvi_ungrazed histogram image. **Issue: Graph not produced.
+hist(OGH2_ndvi_ungrazed)                                #6-OGH2_ndvi_ungrazed histogram image. **Issue:Error in hist.default(v, main = main, plot = plot, ...):invalid number of 'breaks'
 
 
 # Do it all again for LGH2 Grazed ------------------------
@@ -956,8 +915,7 @@ plot(OGH2RGB_crop)                                    #7-OGH2RGB_crop image. Fou
 ex<-extent(OGH2RGB_crop)
 
 OGH2IR_crop<-crop(OGH2_IR_mask, ex)
-plot(OGH2IR_crop)                                     #8-OGH2IR-crop image. One graph produced. 
-
+plot(OGH2IR_crop)                                     #8-OGH2IR-crop image. One graph produced.                                      #9-new: hist_OGH2IR_crop. upload on google drive.
 
 #OGH2: Stack and brick IR and RGB ----------------------
 
@@ -969,7 +927,7 @@ nlayers(OGH2_stack)
 
 OGH2_ndvi_grazed<-((OGH2_stack[[5]]-OGH2_stack[[1]])/ (OGH2_stack[[5]]+OGH2_stack[[1]]))
 plot(OGH2_ndvi_grazed)                                #9OGH2_ndvi_grazed image. One graph produced.
-
+hist(OGH2_ndvi_grazed)                                #10-new-hist_OGH2_ndvi_grazed. Upload updated image to google drive.
 
 #OGH2: Compare Grazed to Ungrazed -------------------
 
@@ -987,8 +945,8 @@ OGH_02_ug<-tibble(
 )
 
 OGH_02<-rbind(OGH_02_g, OGH_02_ug)
-ggplot(data=OGH_01, aes(x=Treatment, y=Value))+
-  geom_violin(scale='area')                      #10-OGH-02 image. One graph produced. 
-hist(OGH2_ndvi_grazed)                           #Check to see if this line is necessary. 
+ggplot(data=OGH_02, aes(x=Treatment, y=Value))+
+  geom_violin(scale='area')                      #11-Update: ggplot_OGH-02 image. 
+
 
 

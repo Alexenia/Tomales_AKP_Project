@@ -69,9 +69,9 @@ projection(BH1_IR_proj)                        #check the projection of BH2_IR_p
 
 #Shapefile
 
-plot(BH1_IR_proj)                    #press-clear broom stick in plots tab, if you get a error that margins are too large. Alex+ani: line 58-Error-plot.new has not been called yet, occured becuase plot name has not been called.
-polygon<-shapefile("Polygons.shp")   #Alex: File format for storing geospatial data in polygon.shp.
-plot(polygon, add=TRUE)              #Alex: This adds another raster ontop of another. This draws the boundary of the two exclosures over the [BH1_IR_proj] image 
+plot(BH1_IR_proj)                         #Error in .rasterObjectFromFile(x, objecttype = "RasterBrick", ...): Cannot create a RasterLayer object from this file. (file does not exist)
+polygon<-shapefile("Polygons.shp")          #Alex: File format for storing geospatial data in polygon.shp.
+plot(polygon, add=TRUE)                     #Alex: This adds another raster ontop of another. This draws the boundary of the two exclosures over the [BH1_IR_proj] image 
 BH1_shp_ug<-subset(polygon, PlotID=='BH-01 UG') #Ungrazed  #Alex: Returns (selected variables) subsets of vectors, matirces or dataframes which meet conditions. Subset(object to be subsetted, logical expression indicating elements or rows to keep).
 BH1_shp_g<-subset(polygon, PlotID=='BH-01 G')#Grazed   
 
